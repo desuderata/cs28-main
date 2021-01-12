@@ -1,0 +1,34 @@
+stages:
+- backend
+- frontend
+
+variables:
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+    - cache/Cypress
+
+backend:
+  stage: backend
+  image: python:3.7
+  cache: {}
+  script:
+  - pip install -r backend/requirements.txt
+  - flake8 backend
+  - coverage run --branch backend/manage.py test backend
+  - coverage report --fail-under=70
+
+frontend:
+  stage: frontend
+  image: cypress/base:10
+  script:
+  - cd frontend
+  - npm ci
+  - ./node_modules/.bin/eslint "**/*.tsx"
+  - npm run start-with-coverage
+  - npm test
+  - npx nyc report --reporter=text-summary --check-coverage=true

@@ -1,0 +1,15 @@
+.added-file {
+  padding: 1em 2em 1em 2em;
+}
+
+.added-file .delete-file-icon {
+  position: relative;
+  float: right;
+  color: red !important;
+  opacity: 0.75;
+}
+
+.added-file .delete-file-icon:hover {
+  opacity: 1;
+  cursor: pointer;
+}
